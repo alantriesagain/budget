@@ -1,0 +1,141 @@
+{
+  "name": "centavo",
+  "version": "0.1.0",
+  "type": "module",
+  "bootstrapp": {
+    "prefix": "cv",
+    "name": "centavo",
+    "short_name": "centavo",
+    "description": "A small personal-finance app: the framework's intermediate showcase",
+    "theme_color": "#0f766e",
+    "bodyClasses": "bg-canvas text-default min-h-screen",
+    "dev": {
+      "port": 3520
+    },
+    "database": {
+      "name": "centavo",
+      "version": 1,
+      "defaultAdapter": "indexeddb"
+    },
+    "components": {
+      "cv": "views/",
+      "template": "views/templates/"
+    },
+    "generator": {
+      "styling": "tailwind"
+    },
+    "theme": {
+      "path": "/theme.js",
+      "runtime": true,
+      "font": {
+        "family": {
+          "family": "'Manrope', system-ui, -apple-system, sans-serif",
+          "google": "Manrope"
+        },
+        "heading": {
+          "family": "'Manrope', system-ui, -apple-system, sans-serif",
+          "google": "Manrope"
+        },
+        "google": [
+          "Manrope"
+        ]
+      },
+      "icon": {
+        "family": "lucide"
+      }
+    },
+    "bundle": {
+      "icons": [
+        "arrow-down-left",
+        "arrow-up-right",
+        "banknote",
+        "bus",
+        "check",
+        "chevron-left",
+        "chevron-right",
+        "circle-ellipsis",
+        "coins",
+        "credit-card",
+        "globe",
+        "heart-pulse",
+        "home",
+        "landmark",
+        "layout-dashboard",
+        "list",
+        "party-popper",
+        "pencil",
+        "piggy-bank",
+        "plus",
+        "refresh-cw",
+        "settings",
+        "shopping-bag",
+        "trash-2",
+        "upload",
+        "utensils",
+        "wallet",
+        "x"
+      ],
+      "components": {
+        "cv-accounts": "/views/accounts.js",
+        "cv-budgets": "/views/budgets.js",
+        "cv-dashboard": "/views/dashboard.js",
+        "cv-import": "/views/import.js",
+        "cv-settings": "/views/settings.js",
+        "cv-transaction-form": "/views/transaction-form.js",
+        "cv-transactions": "/views/transactions.js",
+        "template-app": "/views/templates/app.js",
+        "uix-bar-chart": "/app/uix/display/bar-chart.js",
+        "uix-button": "/app/uix/display/button.js",
+        "uix-darkmode": "/app/uix/utility/darkmode.js",
+        "uix-flex": "/app/uix/layout/flex.js",
+        "uix-icon": "/app/uix/display/icon.js",
+        "uix-input": "/app/uix/form/input.js",
+        "uix-link": "/app/uix/display/link.js",
+        "uix-progress-bar": "/app/uix/feedback/progress-bar.js",
+        "uix-segmented": "/app/uix/form/segmented.js",
+        "uix-spinner": "/app/uix/feedback/spinner.js",
+        "uix-switch": "/app/uix/form/switch.js"
+      }
+    },
+    "i18n": {
+      "locales": [
+        "en",
+        "pt-BR"
+      ],
+      "defaultLocale": "en",
+      "fallbackLocale": "en",
+      "persistLocale": true,
+      "autoRerender": false
+    }
+  },
+  "scripts": {
+    "test": "bootstrapp test --browser"
+  },
+  "dependencies": {
+    "@bootstrapp/app": "workspace:*",
+    "@bootstrapp/base": "workspace:*",
+    "@bootstrapp/controller": "workspace:*",
+    "@bootstrapp/events": "workspace:*",
+    "@bootstrapp/i18n": "workspace:*",
+    "@bootstrapp/icon-lucide": "workspace:*",
+    "@bootstrapp/model": "workspace:*",
+    "@bootstrapp/model-file": "workspace:*",
+    "@bootstrapp/model-indexeddb": "workspace:*",
+    "@bootstrapp/router": "workspace:*",
+    "@bootstrapp/rpc": "workspace:*",
+    "@bootstrapp/signals": "workspace:*",
+    "@bootstrapp/sw": "workspace:*",
+    "@bootstrapp/theme": "workspace:*",
+    "@bootstrapp/tw": "workspace:*",
+    "@bootstrapp/types": "workspace:*",
+    "@bootstrapp/uix": "workspace:*",
+    "@bootstrapp/view": "workspace:*"
+  },
+  "devDependencies": {
+    "@bootstrapp/cli": "workspace:*",
+    "@bootstrapp/devops": "workspace:*",
+    "@bootstrapp/generator": "workspace:*",
+    "@bootstrapp/serve": "workspace:*",
+    "@bootstrapp/html": "workspace:*"
+  }
+}

@@ -1,0 +1,133 @@
+# centavo (examples/centavo)
+
+A small personal-finance app: the framework's intermediate showcase
+
+Built on the Bootstrapp framework. Read the repo-root `CLAUDE.md` for framework rules (runtimes, `$APP`, T.* types, model API, events, build modes). This file records THIS project's conventions — follow them for every change.
+
+## NO COMMENTS
+
+Never write comments in code: no `//`, no `/* */`, no `<!-- -->` inside lit templates. Lint strips them; code must be self-documenting. The only exception is a `/** JSDoc */` block on a genuine public API.
+
+## uix first
+
+Before writing any new `cv-*` component, check `packages/uix` for an existing component and compose it. List every available tag:
+
+```bash
+grep -rhoE 'tag:\s*"uix-[a-z-]+"' packages/uix
+```
+
+`cv-*` views are thin logic wrappers around uix components (`uix-button`, `uix-input`, `uix-icon`, `uix-empty-state`, `uix-modal`, `uix-form`, ...) — never hand-roll a button, input, modal, or list chrome. Restyle uix via `theme.js` (`uix.button`, `uix.input`, ... var blocks), not by wrapping in custom CSS. New lucide icons MUST be added to `package.json` → `bootstrapp.bundle.icons` or they 404 in prod.
+
+## Styling: tailwind
+
+This project uses **theme-token utility classes inline in templates** (recorded at `bootstrapp.generator.styling`), compiled by `@bootstrapp/tw` — the framework's own atomic-CSS engine (Tailwind grammar, no unocss).
+
+- Style with utility classes directly in html templates; no `style: true`, no `.css` siblings.
+- ONLY theme-token utilities: `bg-primary`, `bg-canvas`, `bg-surface`, `text-default`, `text-muted`, `border-dim`, plus spacing/radius scales (`p-4`, `gap-2`, `rounded-lg`). These resolve to `theme.js` CSS variables. Theme `shadow.*` and `radius.*` groups are utilities too (`shadow-card`, `rounded-pill`), and every declared colour has an `on-` companion (`text-on-hero`).
+- Raw palette classes (`bg-blue-500`, `text-gray-600`) have NO CSS unless `bootstrapp.tw.palette: true` is set — and even then prefer tokens; if a color is missing, add it to `theme.js`.
+- Keep every class list a static string literal — the prod class extractor misses concatenated/computed names. A class only composed at runtime goes in `bootstrapp.tw.safelist`.
+- A utility-shaped class the engine doesn't know is reported by `bootstrapp check` (`tw/unknown-class`) and by a dev-console warning — an unknown class ships without CSS.
+
+All styling flows through `theme.js` — the single source of every color, size, radius, and shadow. Never hardcode palette values in views. After editing `theme.js`, run `npx bootstrapp theme:check` to verify the token contract; use the `/restyle-theme` skill for a full visual restyle.
+
+## Component pattern
+
+Views are plain object literals, auto-loaded by tag convention: drop `views/<name>.js` and use `<cv-<name>>` anywhere — never import or register a view manually (the loader resolves the tag prefix via `bootstrapp.components`).
+
+```js
+import { html } from "@bootstrapp/html";
+
+const { T } = globalThis.$APP;
+
+export default {
+  tag: "cv-example",
+  properties: {
+    count: T.number({ defaultValue: 0 }),
+  },
+  render() {
+    return html`<uix-button primary @click=${() => this.count++}>${this.count}</uix-button>`;
+  },
+};
+```
+
+- `T.*` properties are reactive render state — mutate them (`this.count++`), never keep `_vars` + manual update calls. Persist small local state with `T.*({ sync: "local" })`, not localStorage.
+- `defineComponent` from `@bootstrapp/view` is opt-in when you want typed `this`; the default here is the plain object.
+- `views/transactions.js` + `controllers/ledger.js` are the exemplar pair: the view renders and dispatches (`$APP.ledger.get().add(...)`), the controller owns every `$APP.Model` write and the derived state (month summaries, spend series). `sync: "ledger"` on the `month` property is the shared-selection showcase — three screens follow one month. Copy that split, not just the view.
+- Scaffold a new view with `npx bootstrapp new:view <name>` (it follows this project's styling convention).
+
+## Data
+
+Models live in `models/schema.js` (`const { T } = globalThis.$APP;`). Access via `$APP.Model.<name>.add/get/getAll/edit/remove`. Lists load declaratively:
+
+```js
+html`<cv-list .data-query=${{ model: "task", key: "tasks", order: "-createdAt" }}></cv-list>`
+```
+
+with `dataQuery: true` + a matching `tasks` property on the component — the list live-updates on any model change. Add a model with `npx bootstrapp new:model <name> --fields "a:string,b:boolean"`. After schema or package.json changes: `npx bootstrapp types`, then restart serve.
+
+## Controllers
+
+**Logic lives in controllers; views render and dispatch.** Every `$APP.Model` write,
+every rule, every piece of state shared beyond one component goes in a
+`defineController` file under `controllers/` — a component definition minus `render`
+(`properties` with `T.*`, `connected`/`disconnected`, object-literal methods with
+`this`). The scaffolded `controllers/tasks.js` is the live example: it owns
+add/toggle/remove and the `filter` state; the home view binds `filter` with
+`T.string({ sync: "tasks" })` (the controller declares `adapter: true`, so its name
+is a late-bound sync target — property names must match, there is no alias) and calls
+`$APP.tasks.get().toggle(task)` on click. Registration is automatic — every
+`controllers/*.js` (except `index.js`) is discovered at boot, and the singleton is
+created on first use (`.get()` or the first `sync:` bind); `controllers/index.js`
+only composes routes. Scaffold a new one with
+`npx bootstrapp new:controller <name> --properties "count:number"`. Never keep
+shared state on a view or in a module of `let` + setters — `bootstrapp check` flags
+that shape.
+
+## Adding capabilities
+
+Need auth, maps, admin, i18n, notifications, storage, forms, AI...? Run:
+
+```bash
+npx bootstrapp packages:list
+```
+
+then read the chosen package's README, add `"@bootstrapp/<pkg>": "workspace:*"` to `dependencies` — PLUS every framework package it uses transitively (root rule: projects declare every `@bootstrapp/*` they use) — and `pnpm install` + restart serve. The `/add-package` skill walks this; `/add-i18n` covers i18n wiring.
+
+## Commands
+
+```bash
+npx bootstrapp serve                 # dev on :3520 (first run generates .bootstrapp/*.d.ts)
+npx bootstrapp types                 # regenerate typed Model APIs after schema changes
+npx bootstrapp build --spa           # prod build (explicit bundle.components if a view only renders client-side)
+npx bootstrapp new:view <name>       # scaffold a view
+npx bootstrapp new:model <name> --fields "a:string"
+npx bootstrapp theme:check           # validate theme.js token contract
+npx bootstrapp check                 # convention checker — run before committing; also live in serve --watch
+```
+
+`check` enforces this file's conventions mechanically (`--list` shows the rule catalog). Fix errors, don't suppress them; a rule that's genuinely wrong for this project can be overridden in `package.json` → `bootstrapp.check.rules: { "<id>": "off" | "warn" | "error" }`. This project can ship its own rules in `check/rules/*.js`.
+
+Run `npm run lint:fix` from the repo root before committing.
+
+## What this app is for
+
+centavo is the framework's intermediate showcase and DX-evaluation ground:
+readable in one sitting, built strictly by the book, every feature used exactly
+once. When something here feels awkward, it goes in `FRICTION.md` as it
+happens — each entry is a framework fix candidate, and an entry closes when the
+fix lands (two closed already; the `-date` order bug lived in every app until
+this one caught it).
+
+The layering mirrors the meetup-rio showcase at 1/10 size: `lib/` pure and
+node-tested (`node --test lib/*.test.js`), `controllers/` state and IO
+(`ledger`, `budgets`, `rates` — the `resource()` exemplar with live API +
+snapshot fallback — and `importer`), `views/` render and dispatch. i18n is real
+here: every string a `t()` key, money and dates through `lib/money.js` with the
+active locale, en + pt-BR.
+
+## Tests
+
+`npm test` = `bootstrapp test --browser`: the node partition runs the pure lib,
+the browser partition boots the real app in an iframe (`tests/helpers/app.js`)
+and exercises every controller flow. New feature ⇒ its test in the same commit;
+DOM-needing files start with the `browser-only` guard throw.
