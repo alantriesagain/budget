@@ -44,18 +44,16 @@ export default {
                 <uix-input class="flex-1" required .value=${this.name} @input=${(e) => (this.name = e.detail.value)}>
                   <span slot="label">${t("accounts.name")}</span>
                 </uix-input>
-                <label class="flex flex-col gap-1 text-sm font-semibold">
-                  ${t("accounts.kind")}
-                  <select class="rounded-lg border border-dim bg-surface px-3 py-2 text-sm" @change=${(e) => (this.kind = e.target.value)}>
-                    ${KINDS.map((k) => html`<option value=${k} ?selected=${this.kind === k}>${t(`accounts.kinds.${k}`)}</option>`)}
-                  </select>
-                </label>
-                <label class="flex flex-col gap-1 text-sm font-semibold">
-                  ${t("accounts.currency")}
-                  <select class="rounded-lg border border-dim bg-surface px-3 py-2 text-sm" @change=${(e) => (this.currency = e.target.value)}>
-                    ${CURRENCIES.map((c) => html`<option value=${c} ?selected=${this.currency === c}>${c}</option>`)}
-                  </select>
-                </label>
+                <uix-select
+                  label=${t("accounts.kind")}
+                  .options=${KINDS.map((k) => ({ value: k, label: t(`accounts.kinds.${k}`) }))}
+                  .value=${this.kind}
+                  @change=${(e) => (this.kind = e.detail.value)}></uix-select>
+                <uix-select
+                  label=${t("accounts.currency")}
+                  .options=${CURRENCIES}
+                  .value=${this.currency}
+                  @change=${(e) => (this.currency = e.detail.value)}></uix-select>
                 <uix-button primary type="submit">${t("transactions.save")}</uix-button>
               </form>
             `

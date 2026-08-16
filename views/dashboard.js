@@ -1,15 +1,12 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, monthLabel, currentMonth } from "../lib/money.js";
-import { categoryIcon } from "../lib/categories.js";
+import { budgetTone, categoryIcon } from "../lib/categories.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
-const stat = (label, value, tone) => html`
-  <div class="rounded-panel bg-surface p-4 shadow-sm">
-    <div class="text-xs font-semibold uppercase tracking-wide text-muted">${label}</div>
-    <div class="mt-1 text-xl font-black tabular-nums ${tone}">${value}</div>
-  </div>`;
+const stat = (label, value, variant) => html`
+  <uix-stat class="rounded-panel bg-surface p-4 shadow-sm" title=${label} value=${value} variant=${variant}></uix-stat>`;
 
 export default {
   tag: "cv-dashboard",
@@ -59,12 +56,12 @@ export default {
         </div>
 
         <div class="grid grid-cols-3 gap-3">
-          ${stat(t("dashboard.income"), money(s.income), "text-gain")}
-          ${stat(t("dashboard.expenses"), money(-s.expenses), "text-spend")}
-          ${stat(t("dashboard.net"), money(s.net), s.net >= 0 ? "text-gain" : "text-spend")}
+          ${stat(t("dashboard.income"), money(s.income), "success")}
+          ${stat(t("dashboard.expenses"), money(-s.expenses), "danger")}
+          ${stat(t("dashboard.net"), money(s.net), s.net >= 0 ? "success" : "danger")}
         </div>
 
-        ${s.count === 0 ? html`<p class="text-muted">${t("dashboard.empty")}</p>` : ""}
+        ${s.count === 0 ? html`<uix-empty-state icon="banknote" title=${t("dashboard.empty")}></uix-empty-state>` : ""}
 
         <div class="rounded-panel bg-surface p-4 shadow-sm">
           <h2 class="mb-3 text-sm font-bold uppercase tracking-wide text-muted">${t("dashboard.lastMonths")}</h2>
@@ -101,7 +98,7 @@ export default {
                           <span class="font-semibold">${t(`categories.${p.category}`)}</span>
                           <span class="tabular-nums ${p.ratio > 1 ? "font-bold text-spend" : "text-muted"}">${money(-p.spent)} / ${money(-p.limit)}</span>
                         </div>
-                        <uix-progress-bar .value=${Math.min(100, p.ratio * 100)} variant=${p.ratio > 1 ? "error" : p.ratio > 0.85 ? "warning" : "primary"}></uix-progress-bar>
+                        <uix-progress-bar .value=${Math.min(100, p.ratio * 100)} variant=${budgetTone(p.ratio)}></uix-progress-bar>
                       </div>
                     `,
                   )}

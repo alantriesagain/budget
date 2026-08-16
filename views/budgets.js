@@ -1,7 +1,7 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, currentMonth, monthLabel } from "../lib/money.js";
-import { EXPENSE_CATEGORIES, categoryIcon } from "../lib/categories.js";
+import { EXPENSE_CATEGORIES, budgetTone, categoryIcon } from "../lib/categories.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
@@ -57,26 +57,23 @@ export default {
                           ${money(-p.spent)} / ${money(-p.limit)}
                           ${p.ratio > 1 ? html`· ${money(-(p.spent - p.limit))} ${t("budgets.over")}` : ""}
                         </span>
-                        <button type="button" style="background:transparent" aria-label="Remove budget"
-                          class="border-0 p-0 text-muted hover:text-spend" @click=${() => this._remove(p.category)}>
-                          <uix-icon name="x" size="14"></uix-icon>
-                        </button>
+                        <uix-button ghost iconOnly icon="x" size="sm" aria-label="Remove budget"
+                          @click=${() => this._remove(p.category)}></uix-button>
                       </div>
-                      <uix-progress-bar .value=${Math.min(100, p.ratio * 100)} variant=${p.ratio > 1 ? "error" : p.ratio > 0.85 ? "warning" : "primary"}></uix-progress-bar>
+                      <uix-progress-bar .value=${Math.min(100, p.ratio * 100)} variant=${budgetTone(p.ratio)}></uix-progress-bar>
                     </div>
                   `,
                 )}
               </div>
             `
-          : html`<p class="py-4 text-muted">${t("budgets.empty")}</p>`}
+          : html`<uix-empty-state icon="piggy-bank" title=${t("budgets.empty")}></uix-empty-state>`}
 
         <form class="flex items-end gap-3 rounded-panel bg-surface p-4 shadow-sm" @submit=${(e) => this._set(e)}>
-          <label class="flex flex-col gap-1 text-sm font-semibold">
-            ${t("transactions.category")}
-            <select class="rounded-lg border border-dim bg-surface px-3 py-2 text-sm" @change=${(e) => (this.newCategory = e.target.value)}>
-              ${EXPENSE_CATEGORIES.map((c) => html`<option value=${c.id} ?selected=${this.newCategory === c.id}>${t(`categories.${c.id}`)}</option>`)}
-            </select>
-          </label>
+          <uix-select
+            label=${t("transactions.category")}
+            .options=${EXPENSE_CATEGORIES.map((c) => ({ value: c.id, label: t(`categories.${c.id}`) }))}
+            .value=${this.newCategory}
+            @change=${(e) => (this.newCategory = e.detail.value)}></uix-select>
           <uix-input class="flex-1" type="number" min="1" step="1" placeholder="0"
             .value=${this.newLimit} @input=${(e) => (this.newLimit = e.detail.value)}>
             <span slot="label">${t("budgets.limit")}</span>

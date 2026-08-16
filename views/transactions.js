@@ -62,14 +62,16 @@ export default {
         </div>
 
         <div class="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-          <button type="button" @click=${() => (this.category = "all")}
-            class="shrink-0 rounded-full px-3 py-1 text-xs font-bold ${this.category === "all" ? "bg-primary text-inverse" : "bg-surface text-secondary"}">${t("transactions.all")}</button>
+          <uix-tag clickable size="sm" class="shrink-0"
+            variant=${this.category === "all" ? "primary" : "default"}
+            @click=${() => (this.category = "all")}>${t("transactions.all")}</uix-tag>
           ${CATEGORIES.map(
             (c) => html`
-              <button type="button" @click=${() => (this.category = c.id)}
-                class="flex shrink-0 items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${this.category === c.id ? "bg-primary text-inverse" : "bg-surface text-secondary"}">
-                <uix-icon name=${c.icon} size="12"></uix-icon>${t(`categories.${c.id}`)}
-              </button>
+              <uix-tag clickable size="sm" class="shrink-0"
+                variant=${this.category === c.id ? "primary" : "default"}
+                @click=${() => (this.category = c.id)}>
+                <uix-icon name=${c.icon} size="12" class="mr-1"></uix-icon>${t(`categories.${c.id}`)}
+              </uix-tag>
             `,
           )}
         </div>
@@ -82,22 +84,20 @@ export default {
               <div class="flex flex-col divide-y divide-dim overflow-hidden rounded-panel bg-surface shadow-sm">
                 ${visible.map(
                   (r) => html`
-                    <button type="button" style="background:transparent" @click=${() => (this.editing = { ...r })}
-                      class="flex items-center gap-3 border-0 px-4 py-3 text-left">
-                      <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${r.amount >= 0 ? "bg-gain-tint text-gain" : "bg-spend-tint text-spend"}">
-                        <uix-icon name=${categoryIcon(r.category)} size="16"></uix-icon>
-                      </span>
-                      <span class="min-w-0 flex-1">
-                        <span class="block truncate text-sm font-semibold">${r.note || t(`categories.${r.category}`)}</span>
-                        <span class="text-xs text-muted">${formatDate(r.date, locale)} · ${accountOf[r.accountId]?.name || ""}</span>
-                      </span>
-                      <span class="shrink-0 text-sm font-bold tabular-nums ${r.amount >= 0 ? "text-gain" : "text-spend"}">${formatMoney(r.amount, r.currency, locale)}</span>
-                    </button>
+                    <uix-list-row
+                      flat
+                      icon=${categoryIcon(r.category)}
+                      icon-size="16"
+                      label=${r.note || t(`categories.${r.category}`)}
+                      hint="${formatDate(r.date, locale)} · ${accountOf[r.accountId]?.name || ""}"
+                      @select=${() => (this.editing = { ...r })}>
+                      <span slot="trailing" class="shrink-0 text-sm font-bold tabular-nums ${r.amount >= 0 ? "text-gain" : "text-spend"}">${formatMoney(r.amount, r.currency, locale)}</span>
+                    </uix-list-row>
                   `,
                 )}
               </div>
             `
-          : html`<p class="py-8 text-center text-muted">${t("transactions.empty")}</p>`}
+          : html`<uix-empty-state icon="list" title=${t("transactions.empty")}></uix-empty-state>`}
       </div>`;
   },
 };

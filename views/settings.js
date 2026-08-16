@@ -40,26 +40,18 @@ export default {
 
         <div class="flex flex-col gap-3 rounded-panel bg-surface p-4 shadow-sm">
           <h2 class="text-sm font-bold uppercase tracking-wide text-muted">${t("settings.language")}</h2>
-          <div class="flex gap-2">
-            ${LANGUAGES.map(
-              (l) => html`
-                <button type="button" @click=${() => this._setLanguage(l.id)}
-                  class="rounded-lg px-4 py-2 text-sm font-bold ${current === l.id ? "bg-primary text-inverse" : "bg-surface-dark text-secondary"}">${l.label}</button>
-              `,
-            )}
-          </div>
+          <uix-segmented
+            .options=${LANGUAGES.map((l) => ({ value: l.id, label: l.label }))}
+            .value=${current}
+            @change=${(e) => this._setLanguage(e.detail.value)}></uix-segmented>
         </div>
 
         <div class="flex flex-col gap-3 rounded-panel bg-surface p-4 shadow-sm">
           <h2 class="text-sm font-bold uppercase tracking-wide text-muted">${t("settings.displayCurrency")}</h2>
-          <div class="flex gap-2">
-            ${CURRENCIES.map(
-              (c) => html`
-                <button type="button" @click=${() => (this.displayCurrency = c)}
-                  class="rounded-lg px-4 py-2 text-sm font-bold tabular-nums ${this.displayCurrency === c ? "bg-primary text-inverse" : "bg-surface-dark text-secondary"}">${c}</button>
-              `,
-            )}
-          </div>
+          <uix-segmented
+            .options=${CURRENCIES}
+            .value=${this.displayCurrency}
+            @change=${(e) => (this.displayCurrency = e.detail.value)}></uix-segmented>
         </div>
 
         <div class="flex flex-col gap-2 rounded-panel bg-surface p-4 shadow-sm">
@@ -70,7 +62,7 @@ export default {
           ${info
             ? html`<p class="text-sm text-muted">
                 ${t("settings.ratesUpdated")}: ${info.updatedAt || "—"}
-                ${info.offline ? html`<span class="ml-1 rounded bg-warning-light/30 px-1.5 py-0.5 text-xs font-bold text-warning">${t("settings.offline")}</span>` : ""}
+                ${info.offline ? html`<uix-tag variant="warning" size="sm" class="ml-1">${t("settings.offline")}</uix-tag>` : ""}
               </p>`
             : ""}
         </div>
