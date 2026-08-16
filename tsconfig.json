@@ -29,6 +29,8 @@
   },
   "include": [
     ".bootstrapp/globals.d.ts",
+    ".bootstrapp/controllers.d.ts",
+    ".bootstrapp/routes.d.ts",
     ".bootstrapp/components.d.ts",
     ".bootstrapp/schemas.d.ts",
     ".bootstrapp/events.d.ts",

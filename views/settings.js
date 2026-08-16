@@ -1,8 +1,7 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 const LANGUAGES = [
   { id: "en", label: "English" },

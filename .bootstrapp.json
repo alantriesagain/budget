@@ -407,6 +407,7 @@
     "serviceworker": []
   },
   "importmap": {
+    "bootstrapp": "/app/base/app.js",
     "@bootstrapp/app": "/app/app/frontend.js",
     "@bootstrapp/app/": "/app/app/",
     "@bootstrapp/base": "/app/base/app.js",
@@ -474,6 +475,12 @@
     "locales": [
       "en",
       "pt-BR"
+    ]
+  },
+  "routes": {
+    "frontend": [
+      "/app/uix/routes.js",
+      "/routes.js"
     ]
   },
   "vendor": {

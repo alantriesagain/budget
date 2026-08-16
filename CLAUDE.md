@@ -37,7 +37,7 @@ Views are plain object literals, auto-loaded by tag convention: drop `views/<nam
 ```js
 import { html } from "@bootstrapp/html";
 
-const { T } = globalThis.$APP;
+import T from "@bootstrapp/types";
 
 export default {
   tag: "cv-example",
@@ -57,7 +57,7 @@ export default {
 
 ## Data
 
-Models live in `models/schema.js` (`const { T } = globalThis.$APP;`). Access via `$APP.Model.<name>.add/get/getAll/edit/remove`. Lists load declaratively:
+Models live in `models/schema.js` (`import T from "@bootstrapp/types";`). Access via `$APP.Model.<name>.add/get/getAll/edit/remove`. Lists load declaratively:
 
 ```js
 html`<cv-list .data-query=${{ model: "task", key: "tasks", order: "-createdAt" }}></cv-list>`
@@ -76,9 +76,9 @@ add/toggle/remove and the `filter` state; the home view binds `filter` with
 `T.string({ sync: "tasks" })` (the controller declares `adapter: true`, so its name
 is a late-bound sync target — property names must match, there is no alias) and calls
 `$APP.tasks.get().toggle(task)` on click. Registration is automatic — every
-`controllers/*.js` (except `index.js`) is discovered at boot, and the singleton is
-created on first use (`.get()` or the first `sync:` bind); `controllers/index.js`
-only composes routes. Scaffold a new one with
+`controllers/*.js` is discovered at boot, and the singleton is
+created on first use (`.get()` or the first `sync:` bind). Routes live in the root
+`routes.js` — `defineRoutes(routes, { template: "template-app" })`, auto-loaded.
 `npx bootstrapp new:controller <name> --properties "count:number"`. Never keep
 shared state on a view or in a module of `let` + setters — `bootstrapp check` flags
 that shape.
@@ -131,3 +131,11 @@ active locale, en + pt-BR.
 the browser partition boots the real app in an iframe (`tests/helpers/app.js`)
 and exercises every controller flow. New feature ⇒ its test in the same commit;
 DOM-needing files start with the `browser-only` guard throw.
+
+## Standalone mirror
+
+This directory is also published as its own repository via git subtree:
+`npm run examples:split` (from the repo root) refreshes the `centavo-standalone`
+branch — centavo's history with paths rooted at `/` — and
+`git push <centavo-remote> centavo-standalone:main` publishes it. The monorepo
+stays the source of truth; never commit to the standalone repo directly.

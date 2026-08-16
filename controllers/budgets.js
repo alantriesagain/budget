@@ -1,6 +1,5 @@
 import { defineController } from "@bootstrapp/controller";
-
-const $APP = globalThis.$APP;
+import $APP from "bootstrapp";
 
 const idOf = (month, category) => `${month}:${category}`;
 

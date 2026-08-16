@@ -1,9 +1,8 @@
 import { defineController } from "@bootstrapp/controller";
 import { resource } from "@bootstrapp/controller/resource.js";
 import { convertAmount } from "../lib/money.js";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 const API_URL = "https://open.er-api.com/v6/latest/USD";
 const SNAPSHOT_URL = "/assets/rates.json";

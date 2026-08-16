@@ -2,9 +2,8 @@ import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, monthLabel, currentMonth } from "../lib/money.js";
 import { categoryIcon } from "../lib/categories.js";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 const stat = (label, value, tone) => html`
   <div class="rounded-panel bg-surface p-4 shadow-sm">

@@ -1,7 +1,7 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
-
-const { T } = globalThis.$APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 const NAV = [
   { path: "/", key: "dashboard", icon: "layout-dashboard" },
@@ -17,7 +17,7 @@ export default {
   class: "flex flex-1 flex-col min-h-screen",
   properties: {
     component: T.object(),
-    currentRoute: T.object({ sync: globalThis.$APP.Router }),
+    currentRoute: T.object({ sync: $APP.Router }),
   },
   render() {
     const path = globalThis.location?.pathname || "/";

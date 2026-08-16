@@ -1,8 +1,7 @@
 import { defineController } from "@bootstrapp/controller";
 import { currentMonth, monthRange } from "../lib/money.js";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 export default defineController({
   name: "ledger",

@@ -1,9 +1,8 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney } from "../lib/money.js";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 const KIND_ICON = { checking: "landmark", credit: "credit-card", savings: "piggy-bank", cash: "coins" };
 const KINDS = ["checking", "credit", "savings", "cash"];

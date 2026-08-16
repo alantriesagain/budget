@@ -72,3 +72,23 @@ six-line ignore file by hand — that is the definition of a scaffold gap. Fixed
 the template ships `gitignore.tpl` (copyTemplate renames it, since npm mangles
 literal .gitignore files inside packages), and the root ignore learned
 `examples/**`.
+
+## 8. Two conventions for one singleton — CLOSED
+
+Half the codebase read `const { T } = globalThis.$APP` while the other half
+imported T; $APP itself was a global read everywhere because the "bootstrapp"
+specifier only existed inside the prod bundler. Now both are real imports in
+all four runtimes (a workspace package carries the name for Node), the schema
+rule requires the T import, and the repo-wide sweep converted ~750 files. The
+hunt also surfaced that projects/bootstrapp had silently owned the package
+name "bootstrapp" — pnpm was handing out a personal app as a dependency.
+
+## 9. Three apps wrote three page() helpers for the same missing defaults — CLOSED
+
+Every project's controllers/index.js began with a page() wrapper whose only
+job was injecting template/ssg into each route — three copies, three shapes,
+plus one app repeating template: seventeen times and another whose
+localization call had been dead code for months (an option name the wrapper
+never read). defineRoutes(routes, defaults?) owns the defaults now, routes.js
+is auto-loaded like every other citizen, late registration warns instead of
+silently never matching, and Router.go() autocompletes the declared names.

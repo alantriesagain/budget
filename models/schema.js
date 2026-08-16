@@ -1,4 +1,4 @@
-const { T } = globalThis.$APP;
+import T from "@bootstrapp/types";
 
 export default {
   account: {

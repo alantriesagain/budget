@@ -1,8 +1,7 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { CATEGORIES } from "../lib/categories.js";
-
-const { T } = globalThis.$APP;
+import T from "@bootstrapp/types";
 
 export default {
   tag: "cv-transaction-form",

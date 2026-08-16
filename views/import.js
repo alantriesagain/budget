@@ -1,9 +1,8 @@
 import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, formatDate } from "../lib/money.js";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 export default {
   tag: "cv-import",

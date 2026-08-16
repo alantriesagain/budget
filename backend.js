@@ -1,6 +1,5 @@
 import "@bootstrapp/app/entry.js";
-
-const $APP = globalThis.$APP;
+import $APP from "bootstrapp";
 
 $APP.databaseConfig = {
   type: "indexeddb",

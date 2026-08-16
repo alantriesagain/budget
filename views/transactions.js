@@ -2,9 +2,8 @@ import { html } from "@bootstrapp/html";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, formatDate, currentMonth, monthLabel } from "../lib/money.js";
 import { CATEGORIES, categoryIcon } from "../lib/categories.js";
-
-const $APP = globalThis.$APP;
-const { T } = $APP;
+import $APP from "bootstrapp";
+import T from "@bootstrapp/types";
 
 export default {
   tag: "cv-transactions",

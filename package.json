@@ -129,7 +129,8 @@
     "@bootstrapp/tw": "workspace:*",
     "@bootstrapp/types": "workspace:*",
     "@bootstrapp/uix": "workspace:*",
-    "@bootstrapp/view": "workspace:*"
+    "@bootstrapp/view": "workspace:*",
+    "bootstrapp": "workspace:*"
   },
   "devDependencies": {
     "@bootstrapp/cli": "workspace:*",

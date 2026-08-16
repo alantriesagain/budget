@@ -1,7 +1,6 @@
 import { defineController } from "@bootstrapp/controller";
 import { parseCsv, guessMapping, rowsToTransactions } from "../lib/csv.js";
-
-const $APP = globalThis.$APP;
+import $APP from "bootstrapp";
 
 export default defineController({
   name: "importer",
