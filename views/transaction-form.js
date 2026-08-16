@@ -17,7 +17,7 @@ export default {
     cancel: T.any(),
   },
   connected() {
-    if ((this.draft?.amount ?? 0) > 0) this.kind = "income";
+    if ((this.draft.amount ?? 0) > 0) this.kind = "income";
   },
   _field(key, value) {
     this.draft = { ...this.draft, [key]: value };

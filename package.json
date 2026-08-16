@@ -5,6 +5,8 @@
   "bootstrapp": {
     "prefix": "cv",
     "name": "centavo",
+    "basePath": "/budget",
+    "url": "https://alantriesagain.github.io/budget",
     "short_name": "centavo",
     "description": "A small personal-finance app: the framework's intermediate showcase",
     "theme_color": "#0f766e",

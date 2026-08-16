@@ -20,18 +20,18 @@ export default {
     currentRoute: T.object({ sync: $APP.Router }),
   },
   render() {
-    const path = globalThis.location?.pathname || "/";
+    const path = $APP.Router.normalizePath(globalThis.location?.pathname || "/");
     return html`
       <header class="sticky top-0 z-40 border-b border-dim bg-surface/90 backdrop-blur">
         <div class="mx-auto flex w-full max-w-3xl items-center gap-4 px-4 py-3">
-          <a href="/" class="flex items-center gap-2 font-black text-lg tracking-tight text-default no-underline">
+          <a href=${$APP.Router.href("/")} class="flex items-center gap-2 font-black text-lg tracking-tight text-default no-underline">
             <uix-icon name="coins" size="20" class="text-primary"></uix-icon>
             <span>centavo</span>
           </a>
           <nav class="ml-auto flex items-center gap-1 overflow-x-auto">
             ${NAV.map(
               (item) => html`
-                <a href=${item.path}
+                <a href=${$APP.Router.href(item.path)}
                   class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold no-underline transition-colors ${path === item.path ? "bg-primary/10 text-primary" : "text-secondary hover:bg-hover"}">
                   <uix-icon name=${item.icon} size="16"></uix-icon>
                   <span class="hidden sm:inline">${t(`nav.${item.key}`)}</span>
