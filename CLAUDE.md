@@ -51,9 +51,32 @@ export default {
 ```
 
 - `T.*` properties are reactive render state — mutate them (`this.count++`), never keep `_vars` + manual update calls. Persist small local state with `T.*({ sync: "local" })`, not localStorage.
-- `defineComponent` from `@bootstrapp/view` is opt-in when you want typed `this`; the default here is the plain object.
+- **This app opts into `defineComponent`** (the framework default is the plain object literal; `defineComponent` is the typed form). It is a runtime identity wrapper — the auto-loader and bundler see the same definition — and it types `this` inside `render()` and the lifecycle from the `properties` block. centavo is the framework's typed-app exemplar, so every view uses it.
 - `views/transactions.js` + `controllers/ledger.js` are the exemplar pair: the view renders and dispatches (`$APP.ledger.get().add(...)`), the controller owns every `$APP.Model` write and the derived state (month summaries, spend series). `sync: "ledger"` on the `month` property is the shared-selection showcase — three screens follow one month. Copy that split, not just the view.
 - Scaffold a new view with `npx bootstrapp new:view <name>` (it follows this project's styling convention).
+
+## Types (JSDoc + checkJs — this app is the exemplar)
+
+`npm run typecheck` (from the repo root) must report **0 errors** for
+`examples/centavo`. The conventions:
+
+- **`types.ts` at the project root** holds the app's own shapes
+  (`MonthSummary`, `BudgetProgress`, `CsvMapping`, …) and **re-exports the
+  generated row types** from `.bootstrapp/schemas.js` — never redeclare a model
+  row by hand; edit `models/schema.js` and the types follow.
+- **`.js` files reference them with `@import`**:
+  `/** @import { MonthSummary, Prop } from "../types.ts" */`, then plain
+  `@param`/`@returns`/`@type`.
+- **A view property that holds rows or a computed shape declares it** by
+  casting the descriptor:
+  `rows: /** @type {Prop<Row<TransactionRecord>[]>} */ (T.array({ defaultValue: [] }))`.
+  Without the cast `T.array()` is `unknown[]` and `render()` cannot see the
+  fields. `Prop` and `Row` are defined in `types.ts`.
+- **A controller method that takes `this.<prop>` as a default** must read it in
+  the body (`monthTransactions(monthArg) { const month = monthArg ?? this.month; … }`)
+  — TypeScript cannot see `this` inside a parameter default.
+- `lib/` is fully annotated: it is pure, so its types are the cheapest and most
+  useful in the app.
 
 ## Data
 
@@ -119,18 +142,33 @@ fix lands (two closed already; the `-date` order bug lived in every app until
 this one caught it).
 
 The layering mirrors the meetup-rio showcase at 1/10 size: `lib/` pure and
-node-tested (`node --test lib/*.test.js`), `controllers/` state and IO
+node-tested, `controllers/` state and IO
 (`ledger`, `budgets`, `rates` — the `resource()` exemplar with live API +
 snapshot fallback — and `importer`), `views/` render and dispatch. i18n is real
 here: every string a `t()` key, money and dates through `lib/money.js` with the
 active locale, en + pt-BR.
 
-## Tests
+## Tests (three layers — this app is the exemplar)
 
-`npm test` = `bootstrapp test --browser`: the node partition runs the pure lib,
-the browser partition boots the real app in an iframe (`tests/helpers/app.js`)
-and exercises every controller flow. New feature ⇒ its test in the same commit;
-DOM-needing files start with the `browser-only` guard throw.
+`npm test` = `bootstrapp test`, which runs BOTH partitions:
+
+- **Unit** — `lib/{csv,money}.test.js` under node:test: pure functions, no
+  `$APP`, no DOM.
+- **Integration** — `tests/app-*.test.js`: one per controller, booting the real
+  app in an iframe via `@bootstrapp/test/app.js` (`bootApp`, `awaitModule`,
+  `wipe`). Every DOM-needing file starts with the `browser-only` guard throw so
+  the node partition skips it.
+- **E2e** — `tests/e2e/*.e2e.js`: journeys that click through the BUILT app
+  (`npx bootstrapp build --spa --seed` then `npx bootstrapp test --e2e`), served
+  under this project's `/budget` base path exactly as GitHub Pages serves it.
+  `navigation` proves every top-nav link is a SPA transition (a page marker
+  survives), `transaction` adds one through the form and sees the dashboard
+  move, `locale` switches to pt-BR and navigates away. Each ends with
+  `assert.deepEqual(app.errors, [])` — page errors and same-origin 404s fail the
+  journey.
+
+New feature ⇒ its test in the same commit; new controller ⇒ its
+`tests/app-<name>.test.js` (`bootstrapp check` warns otherwise).
 
 ## Standalone mirror
 

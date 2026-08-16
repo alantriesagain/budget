@@ -1,14 +1,17 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import { CATEGORIES } from "../lib/categories.js";
 import T from "@bootstrapp/types";
 
-export default {
+/** @import { AccountRecord, Prop, Row, TransactionDraft } from "../types.ts" */
+
+export default defineComponent({
   tag: "cv-transaction-form",
   class: "block",
   properties: {
-    draft: T.object({ defaultValue: {} }),
-    accounts: T.array({ defaultValue: [] }),
+    draft: /** @type {Prop<TransactionDraft>} */ (T.object({ defaultValue: {} })),
+    accounts: /** @type {Prop<Row<AccountRecord>[]>} */ (T.array({ defaultValue: [] })),
     kind: T.string({ defaultValue: "expense" }),
   },
   events: {
@@ -83,4 +86,4 @@ export default {
         </div>
       </form>`;
   },
-};
+});

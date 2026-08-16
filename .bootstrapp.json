@@ -444,6 +444,8 @@
     "@bootstrapp/uix/": "/app/uix/",
     "@bootstrapp/view": "/app/view/index.js",
     "@bootstrapp/view/": "/app/view/",
+    "@bootstrapp/test": "/app/test/index.js",
+    "@bootstrapp/test/": "/app/test/",
     "@bootstrapp/cli": "/app/cli/types/index.ts",
     "@bootstrapp/cli/": "/app/cli/",
     "esbuild-wasm": "https://esm.sh/esbuild-wasm@0.24.0",

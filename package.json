@@ -118,7 +118,7 @@
     }
   },
   "scripts": {
-    "test": "bootstrapp test --browser"
+    "test": "bootstrapp test"
   },
   "dependencies": {
     "@bootstrapp/app": "workspace:*",
@@ -142,6 +142,7 @@
     "bootstrapp": "workspace:*"
   },
   "devDependencies": {
+    "@bootstrapp/test": "workspace:*",
     "@bootstrapp/cli": "workspace:*",
     "@bootstrapp/devops": "workspace:*",
     "@bootstrapp/generator": "workspace:*",

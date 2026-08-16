@@ -1,4 +1,5 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
@@ -12,7 +13,7 @@ const NAV = [
   { path: "/settings", key: "settings", icon: "settings" },
 ];
 
-export default {
+export default defineComponent({
   tag: "template-app",
   class: "flex flex-1 flex-col min-h-screen",
   properties: {
@@ -45,4 +46,4 @@ export default {
       <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-6">${this.component}</main>
     `;
   },
-};
+});

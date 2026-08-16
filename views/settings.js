@@ -1,4 +1,5 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
@@ -9,7 +10,7 @@ const LANGUAGES = [
 ];
 const CURRENCIES = ["BRL", "USD", "EUR", "GBP"];
 
-export default {
+export default defineComponent({
   tag: "cv-settings",
   class: "block",
   properties: {
@@ -73,4 +74,4 @@ export default {
         </div>
       </div>`;
   },
-};
+});

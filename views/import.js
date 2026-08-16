@@ -1,22 +1,25 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, formatDate } from "../lib/money.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
-export default {
+/** @import { AccountRecord, CsvMapping, ImportResult, Prop, Row } from "../types.ts" */
+
+export default defineComponent({
   tag: "cv-import",
   class: "block",
   properties: {
     text: T.string({ defaultValue: "" }),
-    preview: T.object(),
-    accounts: T.array({ defaultValue: [] }),
+    preview: /** @type {Prop<({ headers: string[], mapping: CsvMapping } & ImportResult) | null>} */ (T.object()),
+    accounts: /** @type {Prop<Row<AccountRecord>[]>} */ (T.array({ defaultValue: [] })),
     accountId: T.string({ defaultValue: "" }),
     done: T.number({ defaultValue: 0 }),
   },
   async connected() {
     this.accounts = await $APP.Model.account.getAll();
-    this.accountId = this.accounts[0]?.id || "";
+    this.accountId = String(this.accounts[0]?.id ?? "");
   },
   _preview() {
     this.done = 0;
@@ -77,4 +80,4 @@ export default {
           : ""}
       </div>`;
   },
-};
+});

@@ -1,5 +1,5 @@
 import Testing from "@bootstrapp/test";
-import { bootApp, disposeApp, awaitModule } from "./helpers/app.js";
+import { bootApp, disposeApp, awaitModule } from "@bootstrapp/test/app.js";
 
 if (typeof document === "undefined") throw new Error("browser-only: needs a DOM");
 

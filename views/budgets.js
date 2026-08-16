@@ -1,16 +1,19 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, currentMonth, monthLabel } from "../lib/money.js";
 import { EXPENSE_CATEGORIES, budgetTone, categoryIcon } from "../lib/categories.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
-export default {
+/** @import { BudgetProgress, Prop } from "../types.ts" */
+
+export default defineComponent({
   tag: "cv-budgets",
   class: "block",
   properties: {
     month: T.string({ defaultValue: currentMonth(), sync: "ledger" }),
-    progress: T.array({ defaultValue: [] }),
+    progress: /** @type {Prop<BudgetProgress[]>} */ (T.array({ defaultValue: [] })),
     newCategory: T.string({ defaultValue: "food" }),
     newLimit: T.string({ defaultValue: "" }),
     loaded: T.boolean({ defaultValue: false }),
@@ -82,4 +85,4 @@ export default {
         </form>
       </div>`;
   },
-};
+});

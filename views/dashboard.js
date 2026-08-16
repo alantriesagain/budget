@@ -1,21 +1,24 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, monthLabel, currentMonth } from "../lib/money.js";
 import { budgetTone, categoryIcon } from "../lib/categories.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
+/** @import { BudgetProgress, MonthSummary, Prop, SpendPoint } from "../types.ts" */
+
 const stat = (label, value, variant) => html`
   <uix-stat class="rounded-panel bg-surface p-4 shadow-sm" title=${label} value=${value} variant=${variant}></uix-stat>`;
 
-export default {
+export default defineComponent({
   tag: "cv-dashboard",
   class: "block",
   properties: {
     month: T.string({ defaultValue: currentMonth(), sync: "ledger" }),
-    summary: T.object(),
-    series: T.array({ defaultValue: [] }),
-    progress: T.array({ defaultValue: [] }),
+    summary: /** @type {Prop<MonthSummary>} */ (T.object()),
+    series: /** @type {Prop<SpendPoint[]>} */ (T.array({ defaultValue: [] })),
+    progress: /** @type {Prop<BudgetProgress[]>} */ (T.array({ defaultValue: [] })),
     loaded: T.boolean({ defaultValue: false }),
   },
   async connected() {
@@ -108,4 +111,4 @@ export default {
           : ""}
       </div>`;
   },
-};
+});

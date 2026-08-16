@@ -1,19 +1,22 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney } from "../lib/money.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
+/** @import { AccountRecord, Prop, Row } from "../types.ts" */
+
 const KIND_ICON = { checking: "landmark", credit: "credit-card", savings: "piggy-bank", cash: "coins" };
 const KINDS = ["checking", "credit", "savings", "cash"];
 const CURRENCIES = ["BRL", "USD", "EUR", "GBP"];
 
-export default {
+export default defineComponent({
   tag: "cv-accounts",
   class: "block",
   properties: {
-    accounts: T.array({ defaultValue: [], sync: $APP.Model.account, query: {} }),
-    balances: T.object({ defaultValue: {} }),
+    accounts: /** @type {Prop<Row<AccountRecord>[]>} */ (T.array({ defaultValue: [], sync: $APP.Model.account, query: {} })),
+    balances: /** @type {Prop<Record<string, number>>} */ (T.object({ defaultValue: {} })),
     adding: T.boolean({ defaultValue: false }),
     name: T.string({ defaultValue: "" }),
     kind: T.string({ defaultValue: "checking" }),
@@ -70,8 +73,8 @@ export default {
                   <span class="block truncate text-sm font-semibold">${a.name}</span>
                   <span class="text-xs text-muted">${t(`accounts.kinds.${a.kind}`)} · ${a.currency}</span>
                 </span>
-                <span class="shrink-0 text-sm font-bold tabular-nums ${(this.balances[a.id] || 0) >= 0 ? "text-gain" : "text-spend"}">
-                  ${formatMoney(this.balances[a.id] || 0, a.currency, locale)}
+                <span class="shrink-0 text-sm font-bold tabular-nums ${(this.balances[String(a.id)] || 0) >= 0 ? "text-gain" : "text-spend"}">
+                  ${formatMoney(this.balances[String(a.id)] || 0, a.currency, locale)}
                 </span>
               </div>
             `,
@@ -79,4 +82,4 @@ export default {
         </div>
       </div>`;
   },
-};
+});

@@ -1,19 +1,22 @@
 import { html } from "@bootstrapp/html";
+import { defineComponent } from "@bootstrapp/view";
 import { t } from "@bootstrapp/i18n";
 import { formatMoney, formatDate, currentMonth, monthLabel } from "../lib/money.js";
 import { CATEGORIES, categoryIcon } from "../lib/categories.js";
 import $APP from "bootstrapp";
 import T from "@bootstrapp/types";
 
-export default {
+/** @import { AccountRecord, Prop, Row, TransactionDraft, TransactionRecord } from "../types.ts" */
+
+export default defineComponent({
   tag: "cv-transactions",
   class: "block",
   properties: {
     month: T.string({ defaultValue: currentMonth(), sync: "ledger" }),
-    rows: T.array({ defaultValue: [] }),
-    accounts: T.array({ defaultValue: [] }),
+    rows: /** @type {Prop<Row<TransactionRecord>[]>} */ (T.array({ defaultValue: [] })),
+    accounts: /** @type {Prop<Row<AccountRecord>[]>} */ (T.array({ defaultValue: [] })),
     category: T.string({ defaultValue: "all" }),
-    editing: T.object(),
+    editing: /** @type {Prop<TransactionDraft | null>} */ (T.object()),
     loaded: T.boolean({ defaultValue: false }),
   },
   async connected() {
@@ -100,4 +103,4 @@ export default {
           : html`<uix-empty-state icon="list" title=${t("transactions.empty")}></uix-empty-state>`}
       </div>`;
   },
-};
+});
