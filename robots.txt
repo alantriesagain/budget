@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /budget/
+Sitemap: https://alantriesagain.github.io/budget/sitemap.xml
