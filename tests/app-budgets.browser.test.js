@@ -1,22 +1,20 @@
-import Testing from "@bootstrapp/test";
+import assert from "node:assert/strict";
+import { describe, it, before, after } from "node:test";
 import { bootApp, disposeApp, awaitModule } from "@bootstrapp/test/app.js";
 
-if (typeof document === "undefined") throw new Error("browser-only: needs a DOM");
 
-const { describe, it, assert, beforeAll, afterAll } = Testing;
-
-Testing.suite("centavo — budgets controller", () => {
+describe("centavo — budgets controller", () => {
   let app;
   let budgets;
   let month;
 
-  beforeAll(async () => {
+  before(async () => {
     app = await bootApp("/settings");
     budgets = await awaitModule(app.win, "budgets");
     month = (await awaitModule(app.win, "ledger")).month;
   });
 
-  afterAll(() => disposeApp(app));
+  after(() => disposeApp(app));
 
   describe("limits", () => {
     it("setLimit creates, then updates the same row", async () => {

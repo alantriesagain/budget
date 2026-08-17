@@ -1,22 +1,20 @@
-import Testing from "@bootstrapp/test";
+import assert from "node:assert/strict";
+import { describe, it, before, after } from "node:test";
 import { bootApp, disposeApp, awaitModule } from "@bootstrapp/test/app.js";
 
-if (typeof document === "undefined") throw new Error("browser-only: needs a DOM");
-
-const { describe, it, assert, beforeAll, afterAll } = Testing;
 
 const CSV = "data;valor;histórico\n01/03/2020;-1.234,56;Mercado do teste\n02/03/2020;2.000,00;Pagamento\nruim;10;lixo";
 
-Testing.suite("centavo — importer controller", () => {
+describe("centavo — importer controller", () => {
   let app;
   let importer;
 
-  beforeAll(async () => {
+  before(async () => {
     app = await bootApp("/settings");
     importer = await awaitModule(app.win, "importer");
   });
 
-  afterAll(async () => {
+  after(async () => {
     const stray = await app.$APP.Model.transaction.getAll({ where: { date: { ">=": "2020-03-01", "<=": "2020-03-31" } } });
     for (const row of stray) await app.$APP.Model.transaction.remove(row.id);
     disposeApp(app);

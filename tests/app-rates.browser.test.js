@@ -1,20 +1,18 @@
-import Testing from "@bootstrapp/test";
+import assert from "node:assert/strict";
+import { describe, it, before, after } from "node:test";
 import { bootApp, disposeApp, awaitModule } from "@bootstrapp/test/app.js";
 
-if (typeof document === "undefined") throw new Error("browser-only: needs a DOM");
 
-const { describe, it, assert, beforeAll, afterAll } = Testing;
-
-Testing.suite("centavo — rates controller", () => {
+describe("centavo — rates controller", () => {
   let app;
   let rates;
 
-  beforeAll(async () => {
+  before(async () => {
     app = await bootApp("/settings");
     rates = await awaitModule(app.win, "rates");
   });
 
-  afterAll(() => disposeApp(app));
+  after(() => disposeApp(app));
 
   describe("the table", () => {
     it("loads a table with a base and a BRL rate, live or snapshot", async () => {

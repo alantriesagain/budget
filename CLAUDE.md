@@ -150,14 +150,15 @@ active locale, en + pt-BR.
 
 ## Tests (three layers — this app is the exemplar)
 
-`npm test` = `bootstrapp test`, which runs BOTH partitions:
+Every test here is written against `node:test` + `node:assert/strict` — the
+same API in both runtimes (see root CLAUDE.md "Testing"). `npm test` =
+`bootstrapp test`, which runs BOTH partitions:
 
-- **Unit** — `lib/{csv,money}.test.js` under node:test: pure functions, no
-  `$APP`, no DOM.
-- **Integration** — `tests/app-*.test.js`: one per controller, booting the real
-  app in an iframe via `@bootstrapp/test/app.js` (`bootApp`, `awaitModule`,
-  `wipe`). Every DOM-needing file starts with the `browser-only` guard throw so
-  the node partition skips it.
+- **Unit** — `lib/{csv,money}.test.js`: pure functions, no `$APP`, no DOM.
+- **Integration** — `tests/app-*.browser.test.js`: one per controller, booting
+  the real app in an iframe via `@bootstrapp/test/app.js` (`bootApp`,
+  `awaitModule`, `wipe`). The `.browser.` in the name is what sends the file to
+  Chromium; a file without it goes to `node --test`.
 - **E2e** — `tests/e2e/*.e2e.js`: journeys that click through the BUILT app
   (`npx bootstrapp build --spa --seed` then `npx bootstrapp test --e2e`), served
   under this project's `/budget` base path exactly as GitHub Pages serves it.
@@ -168,7 +169,7 @@ active locale, en + pt-BR.
   journey.
 
 New feature ⇒ its test in the same commit; new controller ⇒ its
-`tests/app-<name>.test.js` (`bootstrapp check` warns otherwise).
+`tests/app-<name>.browser.test.js` (`bootstrapp check` warns otherwise).
 
 ## Standalone mirror
 
